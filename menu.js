@@ -13,7 +13,7 @@ function updateDishControls() {
   });
 }
 
-function addDish() {
+function addDish(dish = {}) {
   const dishId = nextDishId++;
   const fragment = dishTemplate.content.cloneNode(true);
   const dishCard = fragment.querySelector(".dish-card");
@@ -26,14 +26,26 @@ function addDish() {
     dishCard.querySelector(`[data-label="${fieldName}"]`).htmlFor = fieldId;
   }
 
+  dishCard.querySelector('[data-field="name"]').value = dish.name || "";
+  dishCard.querySelector('[data-field="description"]').value = dish.description || "";
+  dishCard.querySelector('[data-field="ingredients"]').value = dish.ingredients || "";
+  dishCard.querySelector('[data-field="price"]').value = dish.price ?? "";
+  dishCard.dataset.savedPhoto = dish.photo || "";
+  const preview = dishCard.querySelector(".image-preview");
+  if (dish.photo) {
+    preview.src = dish.photo;
+    preview.alt = `Current photo for ${dish.name || "dish"}`;
+    preview.hidden = false;
+  }
+
   dishList.append(fragment);
   updateDishControls();
 }
 
 addDishButton.addEventListener("click", addDish);
 
-function saveDishPhoto(file) {
-  if (!file) return Promise.resolve("");
+function saveDishPhoto(file, existingPhoto = "") {
+  if (!file) return Promise.resolve(existingPhoto);
   if (!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type) || file.size > 1024 * 1024) {
     return Promise.reject(new Error("Dish photos must be JPG, PNG, GIF, or WebP files smaller than 1 MB."));
   }
@@ -47,7 +59,22 @@ function saveDishPhoto(file) {
 
 dishForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const details = JSON.parse(sessionStorage.getItem("vendorLiftRestaurantDetails") || "{}");
+  let currentUser = {};
+  let restaurants = [];
+  try {
+    currentUser = JSON.parse(sessionStorage.getItem("vendorLiftDemoAuth") || "{}");
+    restaurants = JSON.parse(localStorage.getItem("vendorLiftRestaurants") || "[]");
+    if (!Array.isArray(restaurants)) throw new Error("Saved restaurants are not a list.");
+  } catch {
+    window.alert("Your saved restaurant data could not be read. Please reload and try again.");
+    return;
+  }
+  const existingRestaurant = currentUser.email
+    ? restaurants.find((item) => item.ownerEmail === currentUser.email)
+    : restaurants.find((item) => item.id === sessionStorage.getItem("vendorLiftRestaurantId"));
+  let sessionDetails = {};
+  try { sessionDetails = JSON.parse(sessionStorage.getItem("vendorLiftRestaurantDetails") || "{}"); } catch {}
+  const details = Object.keys(sessionDetails).length ? sessionDetails : (existingRestaurant?.details || {});
   const name = String(details.resturantName || "").trim();
   if (!name) {
     window.location.href = "forms.html";
@@ -55,12 +82,7 @@ dishForm.addEventListener("submit", async (event) => {
   }
 
   try {
-    const currentUser = JSON.parse(sessionStorage.getItem("vendorLiftDemoAuth") || "{}");
-    const restaurants = JSON.parse(localStorage.getItem("vendorLiftRestaurants") || "[]");
     const ownerEmail = currentUser.email || "";
-    const existingRestaurant = ownerEmail
-      ? restaurants.find((item) => item.ownerEmail === ownerEmail)
-      : restaurants.find((item) => item.id === sessionStorage.getItem("vendorLiftRestaurantId"));
     const id = existingRestaurant?.id || `restaurant-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Math.random().toString(36).slice(2, 7)}`;
     sessionStorage.setItem("vendorLiftRestaurantId", id);
     const dishes = await Promise.all([...dishList.querySelectorAll(".dish-card")].map(async (card) => ({
@@ -68,7 +90,7 @@ dishForm.addEventListener("submit", async (event) => {
       description: card.querySelector('[data-field="description"]').value.trim(),
       ingredients: card.querySelector('[data-field="ingredients"]').value.trim(),
       price: Number(card.querySelector('[data-field="price"]').value),
-      photo: await saveDishPhoto(card.querySelector('[data-field="photo"]').files[0]),
+      photo: await saveDishPhoto(card.querySelector('[data-field="photo"]').files[0], card.dataset.savedPhoto),
     })));
     const restaurant = { id, ownerEmail, details, dishes, updatedAt: new Date().toISOString() };
     const index = restaurants.findIndex((item) => item.id === id);
@@ -132,4 +154,17 @@ dishList.addEventListener("change", (event) => {
 
 });
 
-addDish();
+let savedDishes = [];
+try {
+  const currentUser = JSON.parse(sessionStorage.getItem("vendorLiftDemoAuth") || "{}");
+  const restaurants = JSON.parse(localStorage.getItem("vendorLiftRestaurants") || "[]");
+  const restaurant = currentUser.email
+    ? restaurants.find((item) => item.ownerEmail === currentUser.email)
+    : restaurants.find((item) => item.id === sessionStorage.getItem("vendorLiftRestaurantId"));
+  if (Array.isArray(restaurant?.dishes)) savedDishes = restaurant.dishes;
+} catch (error) {
+  console.error("Could not load the saved restaurant menu.", error);
+}
+
+if (savedDishes.length) savedDishes.forEach((dish) => addDish(dish));
+else addDish();

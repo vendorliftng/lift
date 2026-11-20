@@ -3,84 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#FFFFFF">
-    <title>Restaurant dashboard | VendorLift</title>
+    <meta name="theme-color" content="#f7f8f5">
+    <title>Dashboard | VendorLift</title>
     <link rel="stylesheet" href="signin.css">
     <link rel="stylesheet" href="community.css">
+    <link rel="stylesheet" href="dashboard.css">
     <script src="auth.js?v=auth-gate" defer></script>
     <script src="community.js" defer></script>
+    <script src="dashboard.js" defer></script>
 </head>
-<body data-auth-required="restaurant">
-    <header class="community-header">
-        <a class="brand" href="index.html" aria-label="VendorLift home">
-            <span class="brand-mark" aria-hidden="true">V</span>
-            <span>VendorLift</span>
-        </a>
-        <nav class="community-nav" aria-label="Main navigation">
-            <a href="dashboard.html" aria-current="page">Dashboard</a>
-            <a href="restaurants.html">Restaurants</a>
-            <a href="feed.html">Community feed</a>
-            <a href="forms.html">Edit profile</a>
-        </nav>
-    </header>
+<body class="owner-dashboard-page" data-auth-required="restaurant">
+    <div class="dashboard-shell">
+        <aside class="dashboard-sidebar">
+            <a class="brand dashboard-brand" href="index.html" aria-label="VendorLift home"><span class="brand-mark" aria-hidden="true">V</span><span>VendorLift</span></a>
+            <p class="sidebar-label">RESTAURANT</p>
+            <nav class="sidebar-nav" aria-label="Dashboard navigation">
+                <a class="sidebar-link is-active" href="dashboard.html" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span>Overview</span></a>
+                <a class="sidebar-link" href="menu.html"><span class="nav-icon" aria-hidden="true">▤</span><span>Menu</span></a>
+                <a class="sidebar-link" href="#orders"><span class="nav-icon" aria-hidden="true">▣</span><span>Orders</span></a>
+                <a class="sidebar-link" href="#enquiries"><span class="nav-icon" aria-hidden="true">✉</span><span>Messages</span></a>
+                <a class="sidebar-link" href="feed.html"><span class="nav-icon" aria-hidden="true">◉</span><span>Community</span></a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a class="sidebar-link" href="restaurant.html"><span class="nav-icon" aria-hidden="true">↗</span><span>View store</span></a>
+                <a class="account-chip" href="forms.html"><span class="account-avatar" data-avatar-letter>G</span><span class="account-copy"><strong data-restaurant-name>The Green Kitchen</strong><small>Edit restaurant profile</small></span></a>
+            </div>
+        </aside>
+        <div class="dashboard-main">
+        <header class="dashboard-topbar">
+            <div class="breadcrumb"><strong>Overview</strong></div>
+            <div class="topbar-actions"><span class="topbar-date" data-today-label></span><span class="topbar-avatar" data-avatar-letter>G</span></div>
+        </header>
 
-    <main class="community-main" data-owner-dashboard>
-        <section class="community-heading">
-            <p class="eyebrow">Restaurant owner · demo</p>
-            <h1>Welcome, <span data-restaurant-name>The Green Kitchen</span></h1>
-            <p data-owner-email></p>
-            <p>Manage your restaurant account, review orders, and see every update you have shared.</p>
-            <a class="community-submit owner-profile-link" data-owner-profile-link href="forms.html">Set up your restaurant page</a>
-        </section>
-        <p class="demo-notice">Demo mode: posts and activity are saved only in this browser. Sign-in and shared restaurant data are not connected to a server yet.</p>
+        <main class="dashboard-content" data-owner-dashboard>
+            <section class="welcome-row">
+                <div><p class="eyebrow dashboard-eyebrow">YOUR RESTAURANT AT A GLANCE</p><h1>Good morning, <span data-greeting-name>there</span> <span aria-hidden="true">✦</span></h1><p class="welcome-copy">Here’s what’s happening with <strong data-restaurant-name>The Green Kitchen</strong> today.</p><p class="owner-email" data-owner-email hidden></p></div>
+                <a class="primary-action" href="forms.html"><span aria-hidden="true">＋</span> Edit restaurant profile</a>
+            </section>
+            <p class="demo-notice"><span aria-hidden="true">ⓘ</span> Demo mode: your activity is saved in this browser. Shared restaurant data and sign-in are not connected to a server yet.</p>
 
-        <div class="dashboard-grid">
-            <section class="community-card" aria-labelledby="create-post-title">
-                <h2 id="create-post-title">Share an update</h2>
-                <p class="community-card-intro">Tell customers about a new dish, special offer, or what's happening today.</p>
-                <form class="post-composer" data-post-form>
-                    <div class="community-field">
-                        <label for="post-caption">Your update</label>
-                        <textarea id="post-caption" name="caption" maxlength="1000" placeholder="What's happening at your restaurant?" required></textarea>
-                    </div>
-                    <div class="community-field">
-                        <label for="post-photo">Upload a photo <span class="optional">(optional)</span></label>
-                        <input id="post-photo" name="photo" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
-                        <p class="community-help">Choose a JPG, PNG, GIF, or WebP image smaller than 2 MB.</p>
-                    </div>
-                    <p class="community-message" data-dashboard-message role="status" aria-live="polite"></p>
-                    <button class="community-submit" type="submit">Publish update</button>
-                </form>
-
-                <div class="dashboard-stats" aria-label="Restaurant activity">
-                    <div class="stat-tile"><strong data-post-count>0</strong><span>Your posts</span></div>
-                    <div class="stat-tile"><strong data-like-count>0</strong><span>Likes</span></div>
-                    <div class="stat-tile"><strong data-comment-count>0</strong><span>Comments</span></div>
-                    <div class="stat-tile"><strong data-save-count>0</strong><span>Saves</span></div>
-                    <div class="stat-tile"><strong data-follower-count>0</strong><span>Followers</span></div>
-                </div>
+            <section class="metric-grid" aria-label="Business overview">
+                <article class="metric-card"><div class="metric-top"><span class="metric-icon mint-icon">▣</span><span class="metric-period">ALL TIME</span></div><strong data-order-count>0</strong><span class="metric-label">Total orders</span><span class="metric-footnote"><span class="metric-dot"></span> Orders placed from your page</span></article>
+                <article class="metric-card"><div class="metric-top"><span class="metric-icon peach-icon">₦</span><span class="metric-period">ALL TIME</span></div><strong data-revenue>₦0</strong><span class="metric-label">Sales revenue</span><span class="metric-footnote">Based on orders received</span></article>
+                <article class="metric-card"><div class="metric-top"><span class="metric-icon lilac-icon">☷</span><a href="menu.html" class="metric-link">Manage menu ↗</a></div><strong data-dish-count>0</strong><span class="metric-label">Menu items</span><span class="metric-footnote">Dishes on your storefront</span></article>
+                <article class="metric-card"><div class="metric-top"><span class="metric-icon blue-icon">♡</span><span class="metric-period">COMMUNITY</span></div><strong data-follower-count>0</strong><span class="metric-label">Followers</span><span class="metric-footnote"><span class="metric-dot follower-dot"></span> People following your page</span></article>
             </section>
 
-            <aside class="community-card" aria-labelledby="recent-posts-title">
-                <h2 id="recent-posts-title">Your feed</h2>
-                <p class="community-card-intro">All updates shared from your restaurant account.</p>
-                <div class="recent-post-list" data-recent-posts></div>
-                <h2 class="dashboard-orders-title">Incoming orders</h2>
-                <p class="community-card-intro">New orders placed from your page.</p>
-                <div class="recent-post-list" data-recent-orders></div>
-                <h2 class="dashboard-orders-title">Enquiries</h2>
-                <p class="community-card-intro">Messages from customers visiting your page.</p>
-                <div class="recent-post-list" data-owner-enquiries></div>
-                <nav class="quick-links" aria-label="Restaurant shortcuts">
-                    <a href="restaurants.html"><span>Preview your restaurant page</span><span aria-hidden="true">&rarr;</span></a>
-                    <a href="feed.html"><span>See the restaurant feed</span><span aria-hidden="true">→</span></a>
-                    <a href="forms.html"><span>Update restaurant details</span><span aria-hidden="true">→</span></a>
-                    <a href="menu.html"><span>Manage dishes</span><span aria-hidden="true">→</span></a>
-                </nav>
-            </aside>
-        </div>
-    </main>
+            <div class="dashboard-columns">
+                <div class="dashboard-primary-column">
+                    <section class="panel activity-panel" aria-labelledby="activity-title">
+                        <div class="panel-heading"><div><p class="panel-kicker">YOUR BUSINESS</p><h2 id="activity-title">Recent activity</h2></div></div>
+                        <div class="activity-chart-wrap"><div class="chart-caption"><div><strong>Orders</strong><span>Recent orders from your page</span></div><span class="chart-period">Last 7 days <span aria-hidden="true">⌄</span></span></div><div class="chart-empty" data-orders-chart><span class="chart-line chart-line-one"></span><span class="chart-line chart-line-two"></span><span class="chart-line chart-line-three"></span><div class="chart-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p>Add your menu to start receiving orders</p></div><div class="chart-days" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div>
+                    </section>
 
-    <footer class="site-footer">© <span data-current-year></span> VendorLift</footer>
+                    <section class="panel list-panel" id="orders" aria-labelledby="orders-title"><div class="panel-heading"><div><p class="panel-kicker">FULFILMENT</p><h2 id="orders-title">Recent orders</h2></div><a href="#orders" class="text-link">All orders <span aria-hidden="true">→</span></a></div><div class="table-head"><span>ORDER</span><span>CUSTOMER</span><span>DATE</span><span>STATUS</span><span>TOTAL</span></div><div class="recent-post-list order-list" data-recent-orders></div></section>
+                </div>
+
+                <aside class="dashboard-secondary-column">
+                    <section class="panel menu-panel" aria-labelledby="menu-title"><div class="panel-heading"><div><p class="panel-kicker">YOUR ITEMS</p><h2 id="menu-title">Restaurant menu</h2></div><a href="menu.html" class="text-link">Manage <span aria-hidden="true">→</span></a></div><div class="menu-preview-list" data-menu-preview></div></section>
+                    <section class="panel composer-panel" aria-labelledby="share-title"><div class="panel-heading"><div><p class="panel-kicker">KEEP CUSTOMERS IN THE LOOP</p><h2 id="share-title">Share an update</h2></div><span class="share-icon" aria-hidden="true">✳</span></div><p class="panel-description">Let your community know what’s fresh, new, or happening today.</p><form class="post-composer" data-post-form><div class="community-field"><label class="sr-only" for="post-caption">Your update</label><textarea id="post-caption" name="caption" maxlength="1000" placeholder="We’re serving something special today..." required></textarea></div><div class="composer-footer"><label class="photo-picker" for="post-photo"><span aria-hidden="true">▧</span> Add a photo <span class="optional">(optional)</span></label><input id="post-photo" name="photo" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden><button class="publish-button" type="submit">Publish update <span aria-hidden="true">→</span></button></div><p class="community-help">Photo optional. JPG, PNG, GIF or WebP under 2 MB.</p><p class="community-message" data-dashboard-message role="status" aria-live="polite"></p></form></section>
+                    <section class="panel enquiries-panel" id="enquiries" aria-labelledby="enquiries-title"><div class="panel-heading"><div><p class="panel-kicker">CUSTOMER MESSAGES</p><h2 id="enquiries-title">Recent enquiries</h2></div><span class="message-count" data-enquiry-count>0</span></div><div class="recent-post-list" data-owner-enquiries></div></section>
+                    <section class="setup-card"><span class="setup-sparkle" aria-hidden="true">✦</span><p class="panel-kicker">GROW YOUR BUSINESS</p><h2>Make your page yours</h2><p>Add your hours, location, and story so customers know exactly where to find you.</p><a href="forms.html">Complete your profile <span aria-hidden="true">→</span></a></section>
+                </aside>
+            </div>
+            <section class="panel posts-panel all-posts-panel" aria-labelledby="posts-title"><div class="panel-heading"><div><p class="panel-kicker">COMMUNITY</p><h2 id="posts-title">All restaurant posts</h2></div><a href="feed.html" class="text-link">Open community feed <span aria-hidden="true">→</span></a></div><div class="mini-stats"><div><strong data-post-count>0</strong><span>Posts</span></div><div><strong data-like-count>0</strong><span>Likes</span></div><div><strong data-comment-count>0</strong><span>Comments</span></div><div><strong data-save-count>0</strong><span>Saves</span></div></div><div class="recent-post-list" data-recent-posts></div></section>
+            <footer class="dashboard-footer">© <span data-current-year></span> VendorLift <span>·</span> Made for local food businesses</footer>
+        </main>
+        </div>
+    </div>
 </body>
 </html>

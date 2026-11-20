@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#FFFFFF">
-    <title>Add dishes | VendorLift</title>
+    <title>Manage your menu | VendorLift</title>
     <link rel="stylesheet" href="forms.css">
     <link rel="stylesheet" href="menu.css">
+    <script src="auth.js?v=menu-gate" defer></script>
     <script src="menu.js" defer></script>
 </head>
-<body>
+<body data-auth-required="restaurant">
     <header class="site-header">
         <a class="brand" href="index.html" aria-label="VendorLift home">
             <span class="brand-mark" aria-hidden="true">V</span>
@@ -21,9 +22,9 @@
         <section class="form-card" aria-labelledby="form-title">
             <a class="back-link" href="forms.html"><span aria-hidden="true">←</span> Back to restaurant details</a>
             <div class="card-heading">
-                <p class="eyebrow">Restaurant profile · Step 2 of 2 you are almost done</p>
-                <h1 id="form-title">Add your dishes</h1>
-                <p>Add a photo, name, price, short description, and ingredients for each dish you serve.</p>
+                <p class="eyebrow">Restaurant menu</p>
+                <h1 id="form-title">Manage your menu</h1>
+                <p>Add dishes or update your existing items. Customers can order these dishes from your restaurant page.</p>
             </div>
 
             <form id="dish-form" action="feed.html" method="GET" enctype="multipart/form-data">
@@ -31,7 +32,7 @@
                 <button id="add-dish" class="secondary-button" type="button">+ Add another dish</button>
                 <div class="form-actions">
                     <a class="back-button" href="forms.html">Back to edit restaurant details</a>
-                    <button class="submit-button" type="submit">Submit dishes</button>
+                    <button class="submit-button" type="submit">Save menu</button>
                 </div>
             </form>
         </section>

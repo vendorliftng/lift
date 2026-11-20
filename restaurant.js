@@ -64,6 +64,7 @@ function renderProfile() {
   socialSection.hidden = false;
   if (isOwner) {
     socialSection.hidden = true;
+    page.querySelector(".order-cart").hidden = true;
   }
   updateFollowButton();
 }
@@ -269,7 +270,7 @@ placeOrderButton.addEventListener("click", () => {
       unitPrice: Number(restaurant.dishes[index].price) || 0,
     }));
     const total = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-    orders.unshift({
+    const order = {
       id: `order-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       restaurantId: restaurant.id,
       restaurantName: restaurant.details.resturantName,
@@ -278,14 +279,22 @@ placeOrderButton.addEventListener("click", () => {
       total,
       createdAt: new Date().toISOString(),
       status: "New",
-    });
+    };
+    orders.unshift(order);
     localStorage.setItem("vendorLiftOrders", JSON.stringify(orders));
     cart.clear();
     renderCart();
-    orderMessage.textContent = "Order placed! This demo saved it in this browser; online payment and restaurant notifications are not connected yet.";
+    const response = {
+      success: true,
+      message: "Order successful! Your order has been placed.",
+      orderId: order.id,
+    };
+    orderMessage.textContent = response.message;
+    orderMessage.dataset.response = JSON.stringify(response);
     orderMessage.classList.remove("is-error");
   } catch {
     orderMessage.textContent = "Your browser could not save this order. Please try again.";
+    orderMessage.dataset.response = JSON.stringify({ success: false, message: orderMessage.textContent });
     orderMessage.classList.add("is-error");
   }
 });

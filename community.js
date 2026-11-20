@@ -4,6 +4,17 @@ const COMMUNITY_KEYS = {
   savedRestaurants: "vendorLiftDemoSavedRestaurants",
 };
 
+const ownerDashboardNav = document.querySelector("[data-owner-dashboard-nav]");
+if (ownerDashboardNav) {
+  let signedInUser = {};
+  try { signedInUser = JSON.parse(sessionStorage.getItem("vendorLiftDemoAuth") || "{}"); } catch {}
+  if (signedInUser.role === "restaurant") {
+    ownerDashboardNav.href = "dashboard.html";
+  } else {
+    ownerDashboardNav.remove();
+  }
+}
+
 const starterPosts = [
   {
     id: "starter-kitchen",
@@ -199,7 +210,7 @@ if (dashboard) {
     console.error("Could not read the owner's restaurant page.", error);
   }
   const ownerProfileLink = dashboard.querySelector("[data-owner-profile-link]");
-  if (ownerRestaurant) {
+  if (ownerProfileLink && ownerRestaurant) {
     ownerProfileLink.href = `restaurant.html?id=${encodeURIComponent(ownerRestaurant.id)}`;
     ownerProfileLink.textContent = "View your restaurant page";
   }
@@ -236,6 +247,15 @@ if (dashboard) {
 
     for (const post of ownPosts.slice().sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))) {
       const item = createElement("article", "recent-post");
+      const photoUrl = safePhotoUrl(post.photoUrl);
+      if (photoUrl) {
+        const photo = document.createElement("img");
+        photo.className = "dashboard-post-photo";
+        photo.src = photoUrl;
+        photo.alt = `Photo shared by ${restaurantName}`;
+        photo.loading = "lazy";
+        item.append(photo);
+      }
       item.append(createElement("p", "", post.caption));
       item.append(createElement("span", "post-meta", `${getDateLabel(post.createdAt)} · ${post.likes || 0} likes · ${(post.comments || []).length} comments`));
       recentPosts.append(item);
