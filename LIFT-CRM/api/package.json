@@ -1,0 +1,22 @@
+{
+  "name": "lift-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Lift CRM back end (Hono on Cloudflare Workers with D1)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute lift-db --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute lift-db --remote --file=schema.sql",
+    "check": "tsc"
+  },
+  "dependencies": {
+    "hono": "^4.6.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261118.1",
+    "typescript": "^5.5.0",
+    "wrangler": "^4.0.0"
+  }
+}

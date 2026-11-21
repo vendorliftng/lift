@@ -1,0 +1,11 @@
+{
+  "name": "lift-crm",
+  "private": true,
+  "description": "Lift CRM for VendorLift: web (React) and api (Hono on Cloudflare Workers)",
+  "scripts": {
+    "install:web": "npm --prefix web install --no-audit --no-fund",
+    "install:api": "npm --prefix api install --no-audit --no-fund",
+    "dev:web": "npm --prefix web run dev",
+    "dev:api": "npm --prefix api run dev"
+  }
+}
